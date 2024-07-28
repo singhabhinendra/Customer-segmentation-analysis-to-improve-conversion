@@ -1,0 +1,21 @@
+In this project Customer-segmentation-analysis-to-improve-conversion.
+There are two datasets named "TRANSACTION_LINE.csv" and "USER_DATA.csv" 
+
+• TRANSACTION_LINE.csv contains various details related to credit accounts of users- it provides a detailed 
+record of credit-related transactions and account information,facilitating analysis and credit related decision-
+making processes for financial institutions.
+
+• USER_DATA.csv serves as a repository for Apex USER.It typically indcludes essential information about users.
+
+Task 1: Data Cleaning and Importing  
+• handling missing values-
+In "USER_DATA.csv" dataset ,two columns have  completely missing values named "PHONE_NUMBER" and "ADDRESS".
+BY USING SQL, drop two columns -
+<!--ATLER TABLE USER_DATA
+DROP COLUMN PHONE_NUMBER and ADDRESS.-->
+• After removing the two columns, reimport both datasets into your database.
+Task 2: Exploratory Data Analysis
+1-Summary of active vs closed accounts.
+•In active accounts, there will be missing column closed date while in closed account,closed date column will be listed there.
+•IN case of closed account, load 
+
