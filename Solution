@@ -15,7 +15,28 @@ BY USING SQL, drop two columns -
 DROP COLUMN PHONE_NUMBER and ADDRESS.-->
 • After removing the two columns, reimport both datasets into your database.
 Task 2: Exploratory Data Analysis
+
 1-Summary of active vs closed accounts.
-•In active accounts, there will be missing column closed date while in closed account,closed date column will be listed there.
-•IN case of closed account, load 
+Active Accounts:
+•In active accounts, there will be missing column "closed date" while in closed account,closed date column will be listed there.
+•The number of active accounts is represented by the variable "X".
+•These are accounts that are currently operational and being used by user till now.
+Closed Accounts:
+•IN case of closed account, account_balance column "closed date" is mentioned there.
+
+•The number of active accounts is represented by the variable "Y";
+•These are accounts that have been terminated or are no longer in use.
+
+2- Breakdown of account_types (e.g.,loans,credit cards) and their current balances.
+SELECT
+    tl.sactioned_amount,
+    tl.account_balance,
+    tl.highest_credit,
+    tl.account_category
+FROM
+    "TRANSACTION_LINE" tl
+GROUP BY
+    tl.account_category,1,2,3;
+3- Analysis of loan amounts vs account balances.
+Loan Amount is always greater than account balance for every  in account ,if that account doesn't have already some amount. 
 
