@@ -38,5 +38,20 @@ FROM
 GROUP BY
     tl.account_category,1,2,3;
 3- Analysis of loan amounts vs account balances.
-Loan Amount is always greater than account balance for every  in account ,if that account doesn't have already some amount. 
-
+•Loan Amount is always greater than account balance for every  in account ,if that account doesn't have already some amount. 
+•analysis through loan amounts vs account balance-
+SELECT 
+MAX(CASE WHEN ownership_type='Joint Account' AND account_category='Two-Wheeler Loan' THEN sactioned_amount-account_balance ELSE NULL END) AS Joint_account_two_wheeler_loan,
+  MAX(CASE WHEN ownership_type = 'Individual' AND account_category = 'Gold Loan' THEN sactioned_amount - account_balance ELSE NULL END) AS Individual_Gold_Loan,
+    MAX(CASE WHEN account_category = 'Credit Card' THEN sactioned_amount - account_balance ELSE NULL END) AS Credit_Card,
+    MAX(CASE WHEN account_category = 'Personal Loan' THEN sactioned_amount - account_balance ELSE NULL END) AS Personal_Loan,
+    MAX(CASE WHEN account_category = 'Housing Loan' THEN sactioned_amount - account_balance ELSE NULL END) AS Housing_Loan,
+    MAX(CASE WHEN account_category = 'Auto Loan' THEN sactioned_amount - account_balance ELSE NULL END) AS Auto_Loan,
+    MAX(CASE WHEN account_category = 'Consumer Loan' THEN sactioned_amount - account_balance ELSE NULL END) AS Consumer_Loan
+FROM "TRANSACTION_LINE"; 
+ Output:-->
+___________________________________________________________________________________________________________________________________
+|joint_account_two_wheeler_loan | individual_gold_loan | credit_card  |  personal_loan | housing_loan | auto_loan | consumer_loan |
+|-------------------------------|----------------------|--------------|----------------|--------------|-----------|---------------|
+|          329959.0             |        49,962        |    49,985    |     499,955    | 17,49,66,023 |  999,994  |    99,989     |
+|_______________________________|______________________|______________|________________|______________|___________|_______________|
