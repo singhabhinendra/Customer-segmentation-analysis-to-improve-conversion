@@ -39,7 +39,7 @@ GROUP BY
     tl.account_category,1,2,3;
 3- Analysis of loan amounts vs account balances.
 •Loan Amount is always greater than account balance for every  in account ,if that account doesn't have already some amount. 
-•analysis through loan amounts vs account balance-
+•Analysis through loan amounts vs account balance-
 SELECT 
 MAX(CASE WHEN ownership_type='Joint Account' AND account_category='Two-Wheeler Loan' THEN sactioned_amount-account_balance ELSE NULL END) AS Joint_account_two_wheeler_loan,
   MAX(CASE WHEN ownership_type = 'Individual' AND account_category = 'Gold Loan' THEN sactioned_amount - account_balance ELSE NULL END) AS Individual_Gold_Loan,
@@ -55,3 +55,65 @@ ________________________________________________________________________________
 |-------------------------------|----------------------|--------------|----------------|--------------|-----------|---------------|
 |          329959.0             |        49,962        |    49,985    |     499,955    | 17,49,66,023 |  999,994  |    99,989     |
 |_______________________________|______________________|______________|________________|______________|___________|_______________|
+4-Overview of the closure percentages for different loan types by ownership type (Individual vs Join Account) :
+• Indivisual Ownership:
+An individual owner holds the loan independently .
+Closure percentages: The closure percentage for individual loans depend on various factors such as creditworthiness,loan terms, and market conditions
+.Generally, individual loans have a diverse range of closure rates based on the borrower's financial situation ans external factors.
+• Joint Ownership: 
+Joint owners share ownership of the loan.
+closure percentages: Joint accounts can be either beneficial or challenging.Here are some considerations:
+  •Beneficial Aspects:
+    •Additional FDIC Insurance: Joint accounts are FDIC insured for up to $250,000 per account owner. With two owners, the coverage extends to $500,000.
+    •Shared Expenses: Couples or family members can use joint accounts to cover shared expenses or save for common goals.
+    •Immediate Access: If one co-owner passes away, the surviving co-owner can access funds immediately.
+Challenges:
+    •Irrevocable: Typically, you cannot remove a co-owner once the joint account is established.
+    •Credit Scores Matter: Lenders examine the credit scores of owners with 20% or more ownership when extending loans.
+    •Risk of Compounded Credit Scores: Even if no single owner has low credit, the average credit score matters. Several owners with less-than-ideal scores may raise concerns.
+
+Task 3: Creating required additional variables & Customer Segmentations
+Create some additional variables and start doing segmentations based on different variables.
+1- Let's start by segmenting customers based on FICO scores and account categories to see the distribution.
+    •Objective: Segment customers based on their FICO scores and account categories.
+    ⅰ•Understand the Data and Requirements:
+     •FICO Score: A measure of a cusomter's crediworthiness.
+     • Account categories: Types of accounts such as 'Credit Card','Personal Loan', etc
+    ⅱ•Segment the Data:
+     •Create Bins for FICO Scores: Define ranges or bins for different FICO score ranges.
+     •Categorize Accounts: Use the existing account categories.
+    ⅲ• Formulate the SQL Query:
+     •Aggregate data based on FICO score ranges and account categories.
+     •Use appropriate SQL functions to group and aggregate data.
+-->Solution: 
+SELECT 
+ CASE 
+ WHEN fico_score>= '300' AND fico_score<'579' THEN 'Poor'
+ WHEN fico_score>= '580' AND fico_score<'669' THEN 'Fair'
+ WHEN fico_score>= '670' AND fico_score<'793' THEN 'Good'
+ WHEN fico_score>='740' AND fico_score<'799' THEN 'Very Good'
+ WHEN fico_score>='800' AND fico_Score<'850' THEN 'Excellent' ELSE 'Unknown'
+ END AS fico_score_category,account_category,
+ count(*) AS num_customers FROM "TRANSACTION_LINE" tl 
+ GROUP BY fico_score_category,account_category
+ ORDER BY fico_score_category, account_category; 
+2•Product Usage Segmentation:Categorizing customers by the types of accounts they hold (e.g.,Auto 
+Loans,Credit Cards, etc.).
+Solution :
+• To categorize the customers by the types of accounts they hold , 
+SELECT 
+    tl.account_category AS loan_type,
+    COUNT(*) AS quantity,
+    tl.customer_id,
+    CONCAT(ud.FIRST_NAME, ' ', ud.LAST_NAME) AS name
+FROM 
+    "TRANSACTION_LINE" tl
+JOIN 
+    user_data ud 
+    ON ud.CUSTOMER_ID = tl.customer_id 
+    tl.account_category,
+    tl.customer_id,
+    ud.FIRST_NAME,
+    ud.LAST_NAME; 
+
+
