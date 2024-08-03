@@ -97,7 +97,7 @@ SELECT
  count(*) AS num_customers FROM "TRANSACTION_LINE" tl 
  GROUP BY fico_score_category,account_category
  ORDER BY fico_score_category, account_category; 
-2•Product Usage Segmentation:Categorizing customers by the types of accounts they hold (e.g.,Auto 
+2- Product Usage Segmentation:Categorizing customers by the types of accounts they hold (e.g.,Auto 
 Loans,Credit Cards, etc.).
 Solution :
 • To categorize the customers by the types of accounts they hold , 
@@ -116,4 +116,68 @@ JOIN
     ud.FIRST_NAME,
     ud.LAST_NAME; 
 
+03- Account Activity Segmentation: Segmenting customers by the status of their accounts (whether they have more
+active or closed accounts) .
 
+1-Segmenting Active Accounts:
+
+Select customer_id, count(*) as active_accounts_count
+from transaction_line
+where account_status ='active'
+group by customer_id;
+
+2-Segmenting Closed Accounts
+
+Select customer_id ,count(*) as closed_accounts_count
+from transaction_line 
+where account_status='closed'
+group by customer_id;
+
+3-Segmenting Customers with Both Active and Closed Accounts
+
+Select Distinct a.customer_id 
+from
+transaction line tl1
+join
+transaction line tl2 on tl1.customer_id=tl2.customer_id
+where tl1.account_status='active' and tl2.account_status='closed';
+4- Segmenting Based on Account Status and Activity
+
+Select customer_id,
+Sum(CASE WHEN account_status='active' THEN 1 ELSE 0 END) as active_accounts_count,
+Sum(CASE WHEN account_status='closed' THEN 1 ELSE 0 END) as closed_accounts_count,
+max(last_activity_date) as last_activity_date
+from 
+transaction line
+group by customer_id;
+
+5-Identifying Customers Who Have Not Logged In Recently (for Active Accounts)
+
+Select customer_id, count(*) AS inactive_active_accounts_count
+from transaction line
+where account_status='active' and last_activity_date<DATE_SUB(CURDATE() ,INTERVAL 6 MONTH) 
+group by customer_id;
+
+6-Finding Closed Accounts with Reasons
+
+Select cutomer_id,
+count(*) as closed_accounts_count,
+closure_reason
+from transaction_line
+where account_status='closed'
+group by customer_id, closure_reason;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
