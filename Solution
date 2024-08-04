@@ -105,7 +105,7 @@ SELECT
     tl.account_category AS loan_type,
     COUNT(*) AS quantity,
     tl.customer_id,
-    CONCAT(ud.FIRST_NAME, ' ', ud.LAST_NAME) AS name
+    CONCAT(ud.FIRST_NAME,' ', ud.LAST_NAME) AS name
 FROM 
     "TRANSACTION_LINE" tl
 JOIN 
@@ -166,8 +166,73 @@ closure_reason
 from transaction_line
 where account_status='closed'
 group by customer_id, closure_reason;
+TASK 04- Cross -Selling Opportunities & Cohort Analysis:
 
+1- Cohort Analysis: Looking at the behaviour of groups of customers who opened their accounts during a similar time
+period.Create a cohort to reveal insights into customer retention and the life cycle of accounts .(for example: categorize
+customers into cohorts based on their account opening dates and then analyse how these cohorts have behaved over time) & analyse
+retention Rates (how long accounts stay open across different cohorts).
+ⅰ-define Cohorts 
+: To define cohorts based on account opening dates;
+SELECT 
+    CUSTOMER_ID,
+    OPENING_DATE,
+    DATE_TRUNC('quarter', OPENING_DATE) AS cohort
+FROM 
+    TRANSACTION_DATE;
 
+ⅱ-Calculate Retention Rates
+:To calculate retention rates for eah cohort over time (e.g.,monthly retention rates
+
+ With cohort_data AS (
+    SELECT 
+        CUSTOMER_ID,
+        OPENING_DATE,
+        DATE_TRUNC('quarter'OPENING_DATE) AS cohort
+    FROM 
+        accounts
+)
+
+SELECT 
+    cohort,
+    EXTRACT(YEAR FROM OPENING_DATE) AS year,
+    EXTRACT(MONTH FROM OPENING_DATE) AS month,
+    COUNT(DISTINCT customer_id) AS total_customers,
+    COUNT(DISTINCT CASE WHEN EXTRACT(MONTH FROM NOW()) - EXTRACT(MONTH FROM OPENING_DATE) >= 1 THEN customer_id END) AS month_1_retained_customers,
+    COUNT(DISTINCT CASE WHEN EXTRACT(MONTH FROM NOW()) - EXTRACT(MONTH FROM OPENING_DATE) >= 2 THEN customer_id END) AS month_2_retained_customers,
+    COUNT(DISTINCT CASE WHEN EXTRACT(MONTH FROM NOW()) - EXTRACT(MONTH FROM OPENING_DATE) >= 3 THEN customer_id END) AS month_3_retained_customers
+FROM 
+    cohort_data
+GROUP BY 
+    cohort, 
+    year,
+    month
+ORDER BY 
+    cohort, 
+    year, 
+    month;
+
+2- Cross-Selling Opportunities: Identifying potential for offering new products to existing customers based on their vurrent holdinga snd behaviour
+patterns.
+ 
+    2.1. Identify Common Account Combinations:Look at customers who have multiple account types and identify common combinations.
+        Assume you have a table `customer_accounts` with columns `customer_id` and `account_type`.
+
+        Select
+        account_type_combination,
+        count(*) AS count_accounts
+        from(select group_contact (DISTINCT account_type order by account_type) as account_type_combination
+        From 
+        customer_accounts
+        group by customer_id
+        ) AS account_combinations
+        group by account_type_combination
+        order by count_accounts desc;
+
+    2.2. Predict likely Next Products: Based on product holding patterns and customer behaviour within cohorst.
+            
+        •To predict which products a customer might be interested in based on their current holdings and behavior.
+        patterns, you can use techniques such as association rules mining or collaborative filtering.
 
 
 
